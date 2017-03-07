@@ -1,0 +1,16 @@
+# JetBrains things
+/.idea/
+*.ims
+*.iml
+*.ipr
+/out/
+Makefile
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*build*
+*.cbp
+
+# QtCreator things
+*.autosave
+CMakeLists.txt.user*
