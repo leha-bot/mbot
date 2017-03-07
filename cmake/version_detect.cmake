@@ -17,7 +17,7 @@ else()
                 ERROR_STRIP_TRAILING_WHITESPACE
         )
         if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
-            include(version_from_git.cmake)
+            include(${CMAKE_SOURCE_DIR}/cmake/version_from_git.cmake)
             version_from_git(GIT_EXECUTABLE ${GIT_EXECUTABLE}
                              INCLUDE_HASH ON
                              )
