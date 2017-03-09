@@ -3,6 +3,7 @@
 
 #include "utils/log_manager.hpp"
 #include <boost/date_time.hpp>
+#include <mutex>
 
 const std::unordered_map<logger_interface::message_type,
                          std::string, log_manager::message_type_hasher> log_manager::type_strings {
@@ -56,4 +57,13 @@ std::string log_manager::format_message(logger_interface::message_type msg_type,
 
     ss << '[' << now << "] [" << component_name << '/' << type_strings.at(msg_type) << "] " << message << '\n';
     return ss.str();
+}
+
+std::shared_ptr<log_manager> log_manager::get_global_manager() {
+    static std::mutex spawn_lock;
+    std::lock_guard<std::mutex> lock(spawn_lock);
+    if (!global_manager) {
+        global_manager.reset(new log_manager);
+    }
+    return global_manager;
 }

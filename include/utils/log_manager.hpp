@@ -27,6 +27,8 @@ public:
     log_manager(log_manager&&) = default;
     log_manager(const log_manager&) = default;
 
+    static std::shared_ptr<log_manager> get_global_manager();
+
     void log(logger_interface::message_type msg_type,
              const std::string& component_name, const std::string& message) noexcept;
 private:
@@ -37,6 +39,7 @@ private:
     std::ofstream log_file;
     boost::filesystem::path directory;
 
+    static std::shared_ptr<log_manager> global_manager;
 };
 
 #endif // MBOT_LOG_MANAGER_HPP

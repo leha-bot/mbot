@@ -15,7 +15,6 @@
 /// DLL with module should export function 'ModuleInterface* init_module(void)' with C linkage.
 template<typename ModuleInterface>
 class module_manager {
-    using namespace boost;
 public:
     using module_init_function = ModuleInterface* (*)();
 
@@ -27,7 +26,7 @@ public:
     /// Skips module if it cannot be loaded for some reason.
     /// \param path - path to directory with modules.
     void load_modules(const boost::filesystem::path& path) {
-        for (auto& entry : filesystem::directory_iterator(path)) {
+        for (auto& entry : boost::filesystem::directory_iterator(path)) {
             if (entry.path().extension() != ".so") {
                 continue;
             }
@@ -44,14 +43,14 @@ public:
     /// Loads module from file.
     /// \throws dll_exception and invalid_argument.
     void load_module(const boost::filesystem::path& path) {
-        if (!filesystem::exists(path)) {
+        if (!boost::filesystem::exists(path)) {
             throw invalid_argument("No such file: " + path.string());
         }
-        if (filesystem::is_directory(path)) {
+        if (boost::filesystem::is_directory(path)) {
             throw invalid_argument(path.string() + " is directory.");
         }
 
-        shared_library dll(filesystem::canonical(path).string());
+        shared_library dll(boost::filesystem::canonical(path).string());
 
         module_init_function init = reinterpret_cast<module_init_function>(dll.resolve_symbol("init_module"));
         ModuleInterface* module = init();
@@ -84,7 +83,7 @@ public:
         return modules;
     }
 private:
-    logger logger;
+    logger manager_logger;
 
     std::unordered_map<std::string, shared_library> dlls;
     std::unordered_map<std::string, std::unique_ptr<ModuleInterface> > modules;

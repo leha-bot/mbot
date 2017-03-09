@@ -11,7 +11,6 @@
 #include "infastructure_facade.hpp"
 
 class module_interface {
-    using namespace TgBot;
 public:
     struct command_info {
         std::string synopsis;
@@ -25,9 +24,9 @@ public:
     virtual std::string   get_nane() = 0;
     virtual command_table get_command_table() { return command_table(); }
 
-    virtual void on_any_message(Message::Ptr message) {}
-    virtual void on_command(const std::string& command, const std::string parameters, Message::Ptr message) {}
-    virtual void on_non_command_message(Message::Ptr message) {}
+    virtual void on_any_message(TgBot::Message::Ptr message) {}
+    virtual void on_command(const std::string& command, const std::string parameters, TgBot::Message::Ptr message) {}
+    virtual void on_non_command_message(TgBot::Message::Ptr message) {}
 
     virtual void on_init(std::unique_ptr<infastructure_facade> facade) {}
     virtual void on_enabled() {}
