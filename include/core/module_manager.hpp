@@ -7,7 +7,8 @@
 #include <unordered_map>
 #include <string>
 #include <boost/filesystem.hpp>
-#include "utils/shared_library.hpp"
+#include "../utils/shared_library.hpp"
+#include "../utils/logger.hpp"
 
 /// Loads, holds ownership and unloads modules.
 /// \tparam ModuleInterface - module interface, should define method 'std::string get_name() const'
@@ -83,6 +84,8 @@ public:
         return modules;
     }
 private:
+    logger logger;
+
     std::unordered_map<std::string, shared_library> dlls;
     std::unordered_map<std::string, std::unique_ptr<ModuleInterface> > modules;
 };
