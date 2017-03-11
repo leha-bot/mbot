@@ -8,6 +8,7 @@
 #include "core/module_manager.hpp"
 #include "utils/log_manager.hpp"
 #include "../../api/module_interface.hpp"
+#include "command_manager.hpp"
 
 class bot {
 public:
@@ -19,10 +20,11 @@ private:
 
     logger core_logger;
 
-    TgBot::Bot bot;
-    module_manager<module_interface> manager;
-    std::shared_ptr<log_manager> log_mgr;
-    std::unordered_map<std::string, module_interface*> command_bindings;
+    TgBot::Bot _bot;
+    module_manager<module_interface> mod_manager;
+    command_manager cmd_manager;
+
+    thread_balancer balancer;
 };
 
 #endif //MBOT_BOT_HPP

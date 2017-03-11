@@ -18,14 +18,18 @@ public:
 
         bool admin_only = false;
         bool creator_only = false;
+
+        module_interface* listener = nullptr;
     };
     using command_table = std::unordered_map<std::string, command_info>;
 
-    virtual std::string   get_nane() = 0;
+    virtual ~module_interface() = default;
+
+    virtual std::string   get_name() = 0;
     virtual command_table get_command_table() { return command_table(); }
 
     virtual void on_any_message(TgBot::Message::Ptr message) {}
-    virtual void on_command(const std::string& command, const std::string parameters, TgBot::Message::Ptr message) {}
+    virtual void on_command(const std::string& command, TgBot::Message::Ptr message) {}
     virtual void on_non_command_message(TgBot::Message::Ptr message) {}
 
     virtual void on_init(std::unique_ptr<infastructure_facade> facade) {}

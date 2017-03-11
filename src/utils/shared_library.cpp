@@ -36,6 +36,10 @@ namespace _impl {
 shared_library::shared_library(const std::string& path) : handle(_impl::load_library(path)) {
 }
 
+shared_library::shared_library(shared_library&& other) : handle(other.handle) {
+    other.detached = true;
+}
+
 shared_library::~shared_library() {
     if (!detached) {
         _impl::unload_library(this->handle);
@@ -53,6 +57,7 @@ void shared_library::detach() {
 bool shared_library::is_detached() const {
     return this->detached;
 }
+
 shared_library::native_handle& shared_library::get_native_handle() {
     return this->handle;
 }

@@ -20,7 +20,7 @@ public:
     ~shared_library();
 
     shared_library(const shared_library&) = delete;
-    shared_library(shared_library&&) = default;
+    shared_library(shared_library&&);
 
     ///
     /// \brief Searches for \arg symbol in DLL.

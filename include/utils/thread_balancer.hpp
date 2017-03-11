@@ -21,7 +21,7 @@ private:
 
     logger balancer_logger;
 
-    bool stop;
+    bool stop = false;
     std::vector<std::thread> threads;
     std::queue<std::function<void()> > queue;
     std::mutex queue_access_lock;

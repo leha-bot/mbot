@@ -18,7 +18,7 @@ class module_manager {
 public:
     using module_init_function = ModuleInterface* (*)();
 
-    module_manager() = default;
+    module_manager() : manager_logger("Module Manager", log_manager::get_global_manager()) {}
     module_manager(const module_manager&) = delete;
     module_manager(module_manager&&) = default;
 
@@ -31,11 +31,14 @@ public:
                 continue;
             }
             try {
+                manager_logger.log(logger::info, "Loading " + entry.path().filename().string() + "...");
                 load_module(entry);
             } catch (std::exception& excp) {
-
+                manager_logger.log(logger::error, "Failed to load " +
+                    entry.path().filename().string() + ": " + excp.what());
             } catch (...) {
-
+                manager_logger.log(logger::error, "Failed to load " +
+                    entry.path().filename().string() + ": Unkonwn error.");
             }
         }
     }
