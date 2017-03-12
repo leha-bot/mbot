@@ -1,3 +1,3 @@
-include_directories(../include)
+include_directories(../include ../api)
 add_subdirectory(utils)
 add_subdirectory(core)

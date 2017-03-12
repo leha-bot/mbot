@@ -9,12 +9,15 @@
 
 class command_manager {
 public:
-    void register_callbacks(TgBot::EventBroadcaster& broadcaster,
+    /// Adds callbacks for each command in table.
+    /// In addition it adds callbacks for some commands like /help /about /start
+    void register_callbacks(TgBot::Bot& bot,
                             thread_balancer& balancer,
                             const module_interface::command_table& table);
 private:
-    std::unordered_map<std::string, std::string> description_strings;
-    std::unordered_map<std::string, std::string> synopsis_strings;
+    std::string get_command_description(const std::string& command) const;
+
+    module_interface::command_table table;
 
     logger cmd_logger = logger("Command Manager", log_manager::get_global_manager());
 };

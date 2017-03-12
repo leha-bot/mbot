@@ -59,5 +59,5 @@ void bot::setup_callbacks() {
             });
         });
     }
-    cmd_manager.register_callbacks(_bot.getEvents(), balancer, table);
+    cmd_manager.register_callbacks(_bot, balancer, table);
 }
