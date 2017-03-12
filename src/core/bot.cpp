@@ -21,7 +21,14 @@ void bot::run() {
     TgBot::TgLongPoll longpool(_bot);
     while (true) {
         core_logger.log(logger::debug, "Fetching updates...");
-        longpool.start();
+        try {
+            longpool.start();
+        } catch (std::exception& excp) {
+            core_logger.log(logger::error, "Uncaught exception during longpool update. what(): "
+                + std::string(excp.what()));
+        } catch (...) {
+            core_logger.log(logger::error, "Uncaught exception during longpool update.");
+        }
     }
 }
 

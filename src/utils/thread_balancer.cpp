@@ -37,7 +37,15 @@ void thread_balancer::thread_entry(thread_balancer& controller) {
                 controller.balancer_logger.log(logger::warning, "Null functor, skipping...");
                 continue;
             }
-            func();
+
+            try {
+                func();
+            } catch (std::exception& excp) {
+                controller.balancer_logger.log(logger::error, "Uncaught exception during job execution. what(): "
+                                               + std::string(excp.what()));
+            } catch (...) {
+                controller.balancer_logger.log(logger::error, "Uncaught exception during job execution.");
+            }
         } else {
             controller.queue_access_lock.unlock();
         }
