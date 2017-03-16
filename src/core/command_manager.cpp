@@ -18,9 +18,9 @@ void command_manager::register_callbacks(TgBot::Bot& bot,
                 try {
                     info.second.listener->on_command(info.first, msg);
                 } catch (std::exception& excp) {
-                    cmd_logger.log(logger::error, "Error in module " + info.first + ": " + excp.what());
+                    cmd_logger.log(logger::error, std::string("Error during handling command: ") + excp.what());
                 } catch (...) {
-                    cmd_logger.log(logger::error, "Unknown error in module " + info.first + ".");
+                    cmd_logger.log(logger::error, "Unknown error during handling command.");
                 }
             });
         });
