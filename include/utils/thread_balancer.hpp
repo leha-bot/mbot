@@ -22,9 +22,12 @@ private:
     logger balancer_logger;
 
     bool stop = false;
+
     std::vector<std::thread> threads;
     std::queue<std::function<void()> > queue;
+
     std::mutex queue_access_lock;
+    std::condition_variable workers_cv;
 };
 
 #endif //MBOT_THREAD_BALANCER_HPP

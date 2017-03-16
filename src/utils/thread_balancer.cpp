@@ -23,31 +23,26 @@ thread_balancer::~thread_balancer() {
 void thread_balancer::schedule(std::function<void()> func) {
     std::lock_guard<std::mutex> lock(queue_access_lock);
     queue.push(func);
+    workers_cv.notify_one();
 }
 
 void thread_balancer::thread_entry(thread_balancer& controller) {
-    while (!controller.stop) {
-        controller.queue_access_lock.lock();
-        if (!controller.queue.empty()) {
-            std::function<void()> func = controller.queue.front();
+    std::function<void()> job;
+    while (true) {
+        {
+            std::unique_lock<std::mutex> lock(controller.queue_access_lock);
+
+            while (!controller.stop && controller.queue.empty()) {
+                controller.workers_cv.wait(lock);
+            }
+            if (controller.stop) {
+                return;
+            }
+
+            job = controller.queue.front();
             controller.queue.pop();
-            controller.queue_access_lock.unlock();
-
-            if (!func) {
-                controller.balancer_logger.log(logger::warning, "Null functor, skipping...");
-                continue;
-            }
-
-            try {
-                func();
-            } catch (std::exception& excp) {
-                controller.balancer_logger.log(logger::error, "Uncaught exception during job execution. what(): "
-                                               + std::string(excp.what()));
-            } catch (...) {
-                controller.balancer_logger.log(logger::error, "Uncaught exception during job execution.");
-            }
-        } else {
-            controller.queue_access_lock.unlock();
         }
+
+        job();
     }
 }
