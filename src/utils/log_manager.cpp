@@ -4,6 +4,7 @@
 #include "utils/log_manager.hpp"
 #include <boost/date_time.hpp>
 #include <mutex>
+#include <thread>
 
 std::shared_ptr<log_manager> log_manager::global_manager;
 
@@ -61,7 +62,8 @@ std::string log_manager::format_message(logger_interface::message_type msg_type,
     std::time_t time = std::time(nullptr);
     std::tm tm = *std::localtime(&time);
 
-    ss << '[' << std::put_time(&tm, "%T") << "] [" << component_name << '/' << type_strings.at(msg_type) << "] " << message << '\n';
+    ss << '[' << std::put_time(&tm, "%T") << "] [Thread-" << std::to_string(get_current_thread_short_id()) << "] ["
+       << component_name << '/' << type_strings.at(msg_type) << "] " << message << '\n';
     return ss.str();
 }
 
@@ -72,4 +74,15 @@ std::shared_ptr<log_manager> log_manager::get_global_manager() {
         global_manager.reset(new log_manager("logs"));
     }
     return global_manager;
+}
+
+int log_manager::get_current_thread_short_id() {
+    static std::unordered_map<std::thread::id, int> short_ids;
+    auto it = short_ids.find(std::this_thread::get_id());
+    if (it != short_ids.end()) {
+        return it->second;
+    } else {
+        auto it = short_ids.insert({ std::this_thread::get_id(), short_ids.size() });
+        return it.first->second;
+    }
 }

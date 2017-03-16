@@ -33,6 +33,8 @@ public:
              const std::string& component_name, const std::string& message) noexcept;
 private:
     void renew_log();
+    static int get_current_thread_short_id();
+
     static std::string format_message(logger_interface::message_type msg_type,
                                       const std::string& component_name, const std::string& message);
 
