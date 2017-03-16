@@ -15,7 +15,7 @@ public:
     void log(message_type type, const std::string& message) const override;
 
 private:
-    const std::string component_name;
+    std::string component_name;
     std::shared_ptr<log_manager> manager;
 };
 
